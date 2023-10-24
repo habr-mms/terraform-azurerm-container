@@ -190,8 +190,8 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
     }
 
     dynamic "linux_os_config" {
-      for_each = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config == {} ? [] : [0]
-
+      # for_each = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config == {} ? [] : [0]
+      for_each = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.swap_file_size_mb != null || local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.transparent_huge_page_defrag != null || local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.transparent_huge_page_enabled != null || length(compact(values(local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.sysctl_config))) > 0 ? [0] : []
 
       content {
         swap_file_size_mb             = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.swap_file_size_mb
